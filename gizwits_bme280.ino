@@ -122,7 +122,7 @@ void do_sensor() {
 }
 
 void get_bme280() {
-  gv_temp = bme.readTemperature();
+  gv_temp = ((int)(bme.readTemperature()*10)) / 10;
   DebugPrint("Temperature: ");
   DebugPrint(gv_temp);
   DebugPrint(" *C ");
@@ -136,7 +136,7 @@ void get_bme280() {
   //Serial.print(bme.readAltitude(SEALEVELPRESSURE_HPA));
   //Serial.println(" m");
 
-  gv_humidity = bme.readHumidity();
+  gv_humidity = ((int)(bme.readHumidity()*10)) / 10;
   DebugPrint("Humidity: ");
   DebugPrint(gv_humidity);
   DebugPrint(" % ");
