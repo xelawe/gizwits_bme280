@@ -82,7 +82,7 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   check_ota();
-  
+
   check_mqtt();
 
   if (gv_senstick == true) {
@@ -113,17 +113,22 @@ void do_sensor() {
   char buffer[10];
   dtostrf(gv_temp, 0, 1, buffer);
   client.publish(mqtt_pubtopic, buffer, true);
-  
+
   send_val(22, gv_humidity);
 
-  
+  send_val(6, gv_press, true);
+
   set_rgb(0, 0, 0);
 
 }
 
 void get_bme280() {
-  gv_temp = (int)(bme.readTemperature()*10);
-  gv_temp = gv_temp / 10;
+  float lv_humidity;
+  float lv_temp;
+  float lv_press;
+
+  lv_temp = (int)(bme.readTemperature() * 10);
+  gv_temp = lv_temp / 10;
   DebugPrint("Temperature: ");
   DebugPrint(gv_temp);
   DebugPrint(" *C ");
@@ -132,13 +137,13 @@ void get_bme280() {
   DebugPrint("Pressure = ");
   DebugPrint(gv_press / 100.0F);
   DebugPrintln(" hPa");
-  
+
   //Serial.print("Approx. Altitude = ");
   //Serial.print(bme.readAltitude(SEALEVELPRESSURE_HPA));
   //Serial.println(" m");
 
-  gv_humidity = (int)(bme.readHumidity()*10);
-  gv_humidity = gv_humidity / 10;
+  lv_humidity = (int)(bme.readHumidity() * 10);
+  gv_humidity = lv_humidity / 10;
   DebugPrint("Humidity: ");
   DebugPrint(gv_humidity);
   DebugPrint(" % ");
