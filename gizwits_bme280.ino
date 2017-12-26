@@ -116,7 +116,7 @@ void do_sensor() {
 
   send_val(22, gv_humidity);
 
-  send_val(6, gv_press, true);
+  send_val(6, gv_press, false);
 
   set_rgb(0, 0, 0);
 
