@@ -1,17 +1,13 @@
-#define serdebug
-#ifdef serdebug
-#define DebugPrint(...) {  Serial.print(__VA_ARGS__); }
-#define DebugPrintln(...) {  Serial.println(__VA_ARGS__); }
-#else
-#define DebugPrint(...) { }
-#define DebugPrintln(...) { }
-#endif
+#include <cy_wunderg.h>
+#include "cy_wunderg_cfg.h"
 
 #include <Ticker.h>
 #include "cy_wifi.h"
 #include "cy_ota.h"
 #include "cy_weather.h"
 #include "cy_mqtt.h"
+
+
 #include "btn_led_tool.h"
 
 
@@ -28,6 +24,8 @@ float gv_press;
 
 Ticker senstick;
 boolean gv_senstick;
+
+cy_wunderg WUnderg( wunderg_host, wunderg_sid, wunderg_pwd);
 
 void do_senstick() {
   gv_senstick = true;
@@ -109,12 +107,14 @@ void do_sensor() {
   get_bme280();
 
   send_val(1, gv_temp);
+  WUnderg.send_temp_c(gv_temp);
   delay(100);
   char buffer[10];
   dtostrf(gv_temp, 0, 1, buffer);
   client.publish(mqtt_pubtopic, buffer, true);
 
   send_val(22, gv_humidity);
+  WUnderg.send_hum(gv_humidity);
 
   send_val(6, gv_press, false);
 
