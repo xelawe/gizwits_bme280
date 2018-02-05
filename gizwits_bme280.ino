@@ -1,5 +1,7 @@
+#include <cy_serdebug.h>
+#include <cy_serial.h>
 #include <cy_wunderg.h>
-#include "cy_wunderg_cfg.h"
+
 
 #include <Ticker.h>
 #include "cy_wifi.h"
@@ -7,9 +9,7 @@
 #include "cy_weather.h"
 #include "cy_mqtt.h"
 
-
 #include "btn_led_tool.h"
-
 
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
@@ -25,7 +25,7 @@ float gv_press;
 Ticker senstick;
 boolean gv_senstick;
 
-cy_wunderg WUnderg( wunderg_host, wunderg_sid, wunderg_pwd);
+cy_wunderg WUnderg( wunderg_host, wunderg_sid, wunderg_pwd, true);
 
 void do_senstick() {
   gv_senstick = true;
@@ -114,7 +114,7 @@ void do_sensor() {
   client.publish(mqtt_pubtopic, buffer, true);
 
   send_val(22, gv_humidity);
-  WUnderg.send_hum(gv_humidity);
+  //WUnderg.send_hum(gv_humidity);
 
   send_val(6, gv_press, false);
 
@@ -143,10 +143,14 @@ void get_bme280() {
   //Serial.println(" m");
 
   lv_humidity = (int)(bme.readHumidity() * 10);
-  gv_humidity = lv_humidity / 10;
-  DebugPrint("Humidity: ");
-  DebugPrint(gv_humidity);
-  DebugPrint(" % ");
-  DebugPrintln();
+  if (lv_humidity <= 1000) {
+    gv_humidity = lv_humidity / 10;
+    DebugPrint("Humidity: ");
+    DebugPrint(gv_humidity);
+    DebugPrint(" % ");
+    DebugPrintln();
+  } else {
+    DebugPrint("Error Humidity");
+  }
 }
 
