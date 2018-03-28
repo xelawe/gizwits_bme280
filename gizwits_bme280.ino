@@ -108,6 +108,7 @@ void do_sensor() {
 
   send_val(1, gv_temp);
   WUnderg.send_temp_c(gv_temp);
+  
   delay(100);
   char buffer[10];
   dtostrf(gv_temp, 0, 1, buffer);
